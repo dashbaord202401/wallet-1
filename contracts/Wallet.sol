@@ -13,12 +13,13 @@ contract Wallet {
         owner = msg.sender;
     }
     
-    function deposit() public payable {
+        receive() external payable {
+        require(msg.value>0 , "Value Can't be Zero");
         balance[msg.sender] += msg.value;
         emit Deposit(msg.sender, msg.value);
     }
 
-    function my_balanca() public view returns(uint) {
+    function my_balance() public view returns(uint) {
         uint bal = balance[msg.sender];
         return bal;
     }
