@@ -28,19 +28,20 @@ contract Wallet {
         uint bal = address(this).balance;
         return bal;
     }
-    function withdraw_balance (uint256 amount) public returns (bool) {
+    function withdraw_balance (uint256 amount) public returns (uint) {
+        require(amount >0, "Can't be zero");
         require(amount <= balance[msg.sender], "Insuffecient Fund");
-        balance[msg.sender] -=amount;
-        bool sent =payable(msg.sender).send(amount);
+        uint bal = balance[msg.sender] -=amount;
+        payable(msg.sender).transfer(amount);
         emit withdraw(msg.sender, amount);
-        return sent;
+        return bal;
     }
-    function transfer_balance (address payable _to, uint256 amount) public returns (bool) {
+    function transfer_balance (address payable _to, uint256 amount) public returns (uint) {
         require(amount <= balance[msg.sender], "Insuffecient Fund");
-        balance[msg.sender] -=amount;
-        bool sent =_to.send(amount);
+        uint bal = balance[msg.sender] -=amount;
+        _to.transfer(amount);
         emit Transfer(_to,amount);
-        return sent;
+        return bal;
     }
 
 

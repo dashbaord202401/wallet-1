@@ -47,9 +47,35 @@ describe("Wallet", ()=> {
         });
 
         expect(await provider.getBalance(wallet.address)).to.equal(6000);
+      
         
         expect(await wallet.connect(address1.address).my_balance()).to.equal(5000);
       })
     })
+    describe("Withdraw From Owner Address", async() => {
+      it("Should Send the Ethers To the Contract" , async () => {
+        const provider = waffle.provider;
+         const withdraw =await wallet.withdraw_balance(500);
+         await withdraw.wait();
+        // expect(await wallet.withdraw_balance(500)).to.equal(500);
+        expect(await wallet.my_balance()).to.equal(500);
+        expect(await wallet.total_balance()).to.equal(5500);
+        expect(await provider.getBalance(wallet.address)).to.equal(5500);
+
+      })
+    })
+    describe("Withdraw From Other Address", async() => {
+      it("Should Send the Ethers To the Contract" , async () => {
+        const provider = waffle.provider;
+         const withdraw =await wallet.connect(address1).withdraw_balance(500);
+         await withdraw.wait();
+        // expect(await wallet.withdraw_balance(500)).to.equal(500);
+        expect(await wallet.connect(address1.address).my_balance()).to.equal(4500);
+        expect(await wallet.total_balance()).to.equal(5000);
+        expect(await provider.getBalance(wallet.address)).to.equal(5000);
+
+      })
+    })
+
   });
 });
